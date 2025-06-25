@@ -4,6 +4,8 @@
 
 Angular frontend for the biometric facial recognition deduplication system. Provides user interface for authentication, file upload, process management, and review of deduplication results.
 
+-Deployment ready , build with success , ken fema haja send mail
+
 ## Prerequisites
 
 - Node.js (v16+ recommended)

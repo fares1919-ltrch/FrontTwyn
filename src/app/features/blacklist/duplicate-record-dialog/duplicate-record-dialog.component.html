@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Duplicate Record Details</h2>
+
+<mat-dialog-content>
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading record details...</p>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="error-container">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-button color="primary" (click)="loadRecordDetails()">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
+  </div>
+
+  <!-- Record details -->
+  <div *ngIf="!isLoading && !error && record" class="record-details">
+    <!-- Current Photo Display -->
+    <div class="current-photo">
+      <img *ngIf="originalImagePreview" [src]="originalImagePreview" [alt]="record.originalFileName" class="photo-preview">
+      <div *ngIf="!originalImagePreview" class="no-preview">
+        <mat-icon>image_not_available</mat-icon>
+        <p>No preview available</p>
+      </div>
+    </div>
+
+    <!-- Duplicate Details -->
+    <div class="duplicates-section">
+      <h4>Duplicates ({{ record.duplicates.length || 0 }})</h4>
+      <div class="duplicates-list" *ngIf="record.duplicates && record.duplicates.length > 0">
+        <div *ngFor="let duplicate of record.duplicates" class="duplicate-item">
+          <div class="duplicate-info">
+            <p class="duplicate-name">{{ duplicate.name }}</p>
+            <p class="duplicate-id">ID: {{ duplicate.id }}</p>
+            <p class="duplicate-similarity">Similarity: {{ duplicate.similarity }}%</p>
+          </div>
+          <button mat-icon-button color="warn" (click)="deletePhoto(duplicate.id)" matTooltip="Delete Photo">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!record.duplicates || record.duplicates.length === 0" class="no-duplicates">
+        <mat-icon>info</mat-icon>
+        <p>No duplicate records found.</p>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+</mat-dialog-actions>

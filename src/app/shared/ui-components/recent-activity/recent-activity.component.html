@@ -1,0 +1,270 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="d-flex align-items-center justify-content-between m-b-20">
+      <mat-card-title class="d-flex align-items-center">
+        <i-tabler name="clock" class="icon-20 m-r-8"></i-tabler>
+        Recent Activity
+      </mat-card-title>
+      <button
+        mat-icon-button
+        (click)="refreshActivity()"
+        [disabled]="isLoading"
+        class="text-muted"
+      >
+        <i-tabler
+          name="refresh"
+          class="icon-16"
+          [class.spin]="isLoading"
+        ></i-tabler>
+      </button>
+    </div>
+
+    @if (isLoading) {
+    <div
+      class="d-flex justify-content-center align-items-center"
+      style="min-height: 200px"
+    >
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+    } @else if (error) {
+    <div
+      class="d-flex flex-column justify-content-center align-items-center"
+      style="min-height: 200px"
+    >
+      <i-tabler
+        name="alert-circle"
+        class="icon-32 text-error m-b-12"
+      ></i-tabler>
+      <p class="text-muted text-center">{{ error }}</p>
+      <button mat-button color="primary" (click)="refreshActivity()">
+        <i-tabler name="refresh" class="icon-16 m-r-8"></i-tabler>
+        Retry
+      </button>
+    </div>
+    } @else if (recentActivities.length === 0) {
+    <div
+      class="d-flex flex-column justify-content-center align-items-center"
+      style="min-height: 200px"
+    >
+      <i-tabler name="inbox" class="icon-48 text-muted m-b-12"></i-tabler>
+      <p class="text-muted text-center">No recent activity</p>
+      <p class="text-muted text-center f-s-12">
+        Activity will appear here as you use the system
+      </p>
+    </div>
+    } @else {
+    <div class="activity-list">
+      @for (activity of recentActivities; track activity.id) {
+      <div
+        class="activity-item d-flex align-items-start p-12 border-bottom"
+        [routerLink]="getActivityRoute(activity)"
+        [queryParams]="getActivityRouteParams(activity)"
+        style="cursor: pointer; transition: background-color 0.2s"
+      >
+        <!-- Activity Icon -->
+        <div
+          class="activity-icon d-flex align-items-center justify-content-center m-r-12"
+          [style.background-color]="activity.color + '20'"
+          [style.color]="activity.color"
+          style="width: 40px; height: 40px; border-radius: 8px; min-width: 40px"
+        >
+          <i-tabler
+            [name]="getActivityIcon(activity.type)"
+            class="icon-18"
+          ></i-tabler>
+        </div>
+
+        <!-- Activity Content -->
+        <div class="activity-content flex-grow-1 min-width-0">
+          <div class="d-flex align-items-center justify-content-between m-b-4">
+            <h6 class="f-s-14 f-w-600 m-b-0 text-truncate">
+              {{ activity.title }}
+            </h6>
+            <span class="f-s-12 text-muted flex-shrink-0 m-l-8">{{
+              getTimeAgo(activity.timestamp)
+            }}</span>
+          </div>
+
+          <p class="f-s-12 text-muted m-b-8 text-truncate">
+            {{ activity.description }}
+          </p>
+
+          <div class="d-flex align-items-center justify-content-between">
+            <span
+              class="badge f-s-10 p-x-8 p-y-4 rounded-pill"
+              [ngClass]="getStatusBadgeClass(activity.status)"
+            >
+              {{ activity.status }}
+            </span>
+            <span class="f-s-10 text-muted">{{
+              getActivityTypeLabel(activity.type)
+            }}</span>
+          </div>
+        </div>
+
+        <!-- Navigation Arrow -->
+        <div class="activity-arrow d-flex align-items-center m-l-8">
+          <i-tabler name="chevron-right" class="icon-14 text-muted"></i-tabler>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- View All Link -->
+    <div class="text-center m-t-16">
+      <button mat-button color="primary" routerLink="/features/processes">
+        <i-tabler name="external-link" class="icon-16 m-r-8"></i-tabler>
+        View All Processes
+      </button>
+    </div>
+    }
+  </mat-card-content>
+</mat-card>
+
+<style>
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .activity-item:hover {
+    background-color: #f8f9fa !important;
+  }
+
+  .activity-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .activity-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .activity-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+
+  .activity-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+  }
+
+  .activity-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+
+  .border-bottom {
+    border-bottom: 1px solid #f0f0f0 !important;
+  }
+
+  .border-bottom:last-child {
+    border-bottom: none !important;
+  }
+
+  .min-width-0 {
+    min-width: 0;
+  }
+
+  .text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .p-x-8 {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .p-y-4 {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .p-12 {
+    padding: 12px;
+  }
+
+  .m-r-12 {
+    margin-right: 12px;
+  }
+
+  .m-l-8 {
+    margin-left: 8px;
+  }
+
+  .m-b-4 {
+    margin-bottom: 4px;
+  }
+
+  .m-b-8 {
+    margin-bottom: 8px;
+  }
+
+  .m-b-12 {
+    margin-bottom: 12px;
+  }
+
+  .m-b-20 {
+    margin-bottom: 20px;
+  }
+
+  .m-t-16 {
+    margin-top: 16px;
+  }
+
+  .f-s-10 {
+    font-size: 10px;
+  }
+
+  .f-s-12 {
+    font-size: 12px;
+  }
+
+  .f-s-14 {
+    font-size: 14px;
+  }
+
+  .f-w-600 {
+    font-weight: 600;
+  }
+
+  .icon-14 {
+    width: 14px;
+    height: 14px;
+  }
+
+  .icon-16 {
+    width: 16px;
+    height: 16px;
+  }
+
+  .icon-18 {
+    width: 18px;
+    height: 18px;
+  }
+
+  .icon-20 {
+    width: 20px;
+    height: 20px;
+  }
+
+  .icon-32 {
+    width: 32px;
+    height: 32px;
+  }
+
+  .icon-48 {
+    width: 48px;
+    height: 48px;
+  }
+</style>

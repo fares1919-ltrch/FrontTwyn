@@ -1,0 +1,162 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="d-flex align-items-center justify-content-between m-b-16">
+      <mat-card-title class="d-flex align-items-center">
+        <i-tabler name="chart-pie" class="icon-20 m-r-8"></i-tabler>
+        System Overview
+      </mat-card-title>
+      <button
+        mat-icon-button
+        (click)="refreshStats()"
+        [disabled]="isLoading"
+        class="text-muted"
+      >
+        <i-tabler
+          name="refresh"
+          class="icon-16"
+          [class.spin]="isLoading"
+        ></i-tabler>
+      </button>
+    </div>
+
+    @if (isLoading) {
+    <div
+      class="d-flex justify-content-center align-items-center"
+      style="min-height: 200px"
+    >
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+    } @else if (error) {
+    <div
+      class="d-flex flex-column justify-content-center align-items-center"
+      style="min-height: 200px"
+    >
+      <i-tabler name="alert-circle" class="icon-32 text-error m-b-8"></i-tabler>
+      <p class="text-muted text-center">{{ error }}</p>
+      <button mat-button color="primary" (click)="refreshStats()">
+        <i-tabler name="refresh" class="icon-16 m-r-8"></i-tabler>
+        Retry
+      </button>
+    </div>
+    } @else if (dashboardStats) {
+    <div class="row m-t-24">
+      <div class="col-7">
+        <h4 class="f-s-24">
+          {{ formatNumber(dashboardStats.totalProcesses) }}
+        </h4>
+        <p class="text-muted f-s-12 m-b-0">Total Processes</p>
+
+        <div class="d-flex align-items-center m-t-16">
+          <button
+            mat-icon-button
+            class="shadow-none icon-27 p-0 d-flex align-items-center justify-content-center"
+            [ngClass]="'bg-light-success ' + getSuccessRateColor()"
+          >
+            <i-tabler
+              [name]="getSuccessRateIcon()"
+              class="icon-20 d-flex align-items-center"
+            ></i-tabler>
+          </button>
+          <div class="f-w-600 m-l-12 f-s-14">
+            {{ dashboardStats.successRate }}%
+          </div>
+          <div class="m-l-4 f-s-14 text-muted">success rate</div>
+        </div>
+
+        <!-- Key Statistics -->
+        <div class="m-t-24">
+          <div class="d-flex align-items-center m-b-8">
+            <i-tabler
+              name="circle-filled"
+              class="text-primary icon-8 d-flex"
+            ></i-tabler>
+            <span class="m-l-8 f-s-12 text-muted"
+              >Active: {{ dashboardStats.activeProcesses }}</span
+            >
+          </div>
+          <div class="d-flex align-items-center m-b-8">
+            <i-tabler
+              name="circle-filled"
+              class="text-success icon-8 d-flex"
+            ></i-tabler>
+            <span class="m-l-8 f-s-12 text-muted"
+              >Completed: {{ dashboardStats.completedProcesses }}</span
+            >
+          </div>
+          <div class="d-flex align-items-center m-b-8">
+            <i-tabler
+              name="circle-filled"
+              class="text-warning icon-8 d-flex"
+            ></i-tabler>
+            <span class="m-l-8 f-s-12 text-muted"
+              >Files: {{ formatNumber(dashboardStats.totalFiles) }}</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-5 d-flex align-items-start justify-content-center">
+        <apx-chart
+          [series]="systemStatsChart.series"
+          [dataLabels]="systemStatsChart.dataLabels"
+          [chart]="systemStatsChart.chart"
+          [legend]="systemStatsChart.legend"
+          [colors]="systemStatsChart.colors"
+          [stroke]="systemStatsChart.stroke"
+          [tooltip]="systemStatsChart.tooltip"
+          [plotOptions]="systemStatsChart.plotOptions"
+          [responsive]="systemStatsChart.responsive"
+          [labels]="systemStatsChart.labels"
+        >
+        </apx-chart>
+      </div>
+    </div>
+
+    <!-- Additional Stats Row -->
+    <div class="row m-t-16 p-t-16" style="border-top: 1px solid #f0f0f0">
+      <div class="col-6">
+        <div class="text-center">
+          <h6 class="f-s-16 f-w-600 text-primary">
+            {{ dashboardStats.duplicatesFound }}
+          </h6>
+          <p class="f-s-12 text-muted m-b-0">Duplicates Found</p>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="text-center">
+          <h6 class="f-s-16 f-w-600 text-warning">
+            {{ dashboardStats.conflictsDetected }}
+          </h6>
+          <p class="f-s-12 text-muted m-b-0">Conflicts Detected</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action -->
+    <div class="d-flex justify-content-center m-t-16">
+      <button
+        mat-stroked-button
+        color="primary"
+        routerLink="/features/deduplication"
+      >
+        <i-tabler name="copy" class="icon-16 m-r-4"></i-tabler>
+        View Deduplication
+      </button>
+    </div>
+    }
+  </mat-card-content>
+</mat-card>
+
+<style>
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

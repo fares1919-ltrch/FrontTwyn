@@ -1,0 +1,194 @@
+.nav-caption {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-weight: 700;
+  font-size: 12px;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  padding-left: 8px;
+  position: relative;
+
+  // Add a subtle line underneath
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 8px;
+    right: 8px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .nav-caption-icon {
+    margin-right: 8px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #000000;
+  }
+}
+
+:host-context(.dark-theme) {
+  .nav-caption {
+    color: #ffffff; // White text for dark theme
+
+    &::after {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-caption-icon {
+      color: #ffffff;
+    }
+  }
+}
+
+:host {
+  display: block;
+  outline: none;
+
+  // Override for mat-mdc-list-item width
+  ::ng-deep mat-mdc-list-item, ::ng-deep .mat-mdc-list-option {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .menu-list-item {
+    position: relative;
+    border-radius: 12px;
+    margin: 4px 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    padding: 10px 12px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    width: calc(100% - 16px);
+    box-sizing: border-box;
+    min-width: 240px;
+
+    // Normal state with subtle hover effect
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      background: rgba(0, 123, 255, 0.1);
+      border-color: rgba(0, 123, 255, 0.2);
+      transform: translateX(2px);
+    }
+
+    // Active state with blue background
+    &.activeMenu {
+      background: #007bff;
+      color: white;
+      box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+      border: none;
+      transform: translateX(4px);
+
+      // Subtle shine effect
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+        pointer-events: none;
+      }
+
+      // Left border indicator
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+
+      // Icon and text color
+      .routeIcon {
+        color: white;
+        opacity: 1;
+      }
+
+      .hide-menu {
+        color: white;
+        opacity: 1;
+      }
+
+      &:hover {
+        background: #0056b3;
+        box-shadow: 0 6px 24px rgba(0, 123, 255, 0.4);
+      }
+    }
+
+    .routeIcon {
+      transition: all 0.2s ease;
+      opacity: 0.7;
+      margin-right: 8px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .hide-menu {
+      transition: all 0.2s ease;
+      opacity: 0.7;
+      font-weight: 500;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+      width: auto;
+    }
+  }
+
+  // Indent child items
+  :host-context([depth="1"]) {
+    .menu-list-item {
+      padding-left: 16px;
+      font-size: 14px;
+    }
+  }
+
+  :host-context([depth="2"]) {
+    .menu-list-item {
+      padding-left: 32px;
+      font-size: 13px;
+    }
+  }
+}
+
+// Dark theme adjustments
+:host-context(.dark-theme) {
+  .menu-list-item {
+    background: rgba(255, 255, 255, 0.05);
+
+    &:hover {
+      background: rgba(0, 123, 255, 0.15);
+      border-color: rgba(0, 123, 255, 0.2);
+    }
+
+    &.activeMenu {
+      background: #0056b3;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+
+      &:hover {
+        background: #004494;
+      }
+
+      &::after {
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+      }
+    }
+  }
+}
+

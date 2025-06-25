@@ -1,0 +1,84 @@
+<h2 mat-dialog-title>Exception Details</h2>
+
+<mat-dialog-content>
+  <!-- Exception details -->
+  <div class="exception-details">
+    <div class="detail-section">
+      <h3>Basic Information</h3>
+      <div class="detail-row">
+        <span class="detail-label">ID:</span>
+        <span class="detail-value">{{
+          exception.shortId || exception.id
+        }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Process ID:</span>
+        <span class="detail-value">{{
+          exception.shortProcessId || formatProcessId(exception.processId)
+        }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Status:</span>
+        <span
+          class="detail-value"
+          [ngClass]="'status-' + exception.status.toLowerCase()"
+        >
+          {{ exception.status }}
+        </span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Created:</span>
+        <span class="detail-value">{{ formatDate(exception.createdAt) }}</span>
+      </div>
+      <div class="detail-row" *ngIf="exception.updatedAt">
+        <span class="detail-label">Updated:</span>
+        <span class="detail-value">{{ formatDate(exception.updatedAt) }}</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>File Information</h3>
+      <div class="detail-row">
+        <span class="detail-label">File Name:</span>
+        <span class="detail-value">{{ exception.fileName }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Comparison Score:</span>
+        <span class="detail-value">{{
+          exception.comparisonScore.toFixed(4)
+        }}</span>
+      </div>
+    </div>
+
+    <div
+      class="detail-section"
+      *ngIf="
+        exception.candidateFileNames && exception.candidateFileNames.length > 0
+      "
+    >
+      <h3>Candidate Files</h3>
+      <mat-list>
+        <mat-list-item
+          *ngFor="
+            let candidateFile of exception.candidateFileNames;
+            let i = index
+          "
+        >
+          <span class="candidate-index">{{ i + 1 }}.</span>
+          <span class="candidate-name">{{ candidateFile }}</span>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
+    <div class="detail-section" *ngIf="exception.metadata">
+      <h3>Additional Metadata</h3>
+      <div class="metadata-container">
+        <pre>{{ exception.metadata | json }}</pre>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+</mat-dialog-actions>

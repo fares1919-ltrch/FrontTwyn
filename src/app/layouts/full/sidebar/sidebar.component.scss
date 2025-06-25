@@ -1,0 +1,165 @@
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* Remove the auto scrolling from container */
+  overflow: hidden;
+  position: relative;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  height: 100px; /* Increased height for larger logo */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 70px;
+
+  .branding {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+
+    .logo {
+      height: 70px; /* Increased logo size */
+      width: auto;
+      object-fit: contain;
+    }
+  }
+
+  /* For desktop view */
+  @media (min-width: 769px) {
+    margin-top: 0;
+  }
+}
+
+.navigation-container {
+  flex: 1;
+  /* This is the only element that should scroll */
+  overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  /* Show a visible scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  width: 100%;
+  box-sizing: border-box;
+
+  /* Custom scrollbar for WebKit browsers */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 0; /* Hide horizontal scrollbar */
+    display: block;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.sidebar-nav {
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .mat-subheader.nav-caption {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 16px;
+    font-weight: 700;
+    height: 48px;
+    padding: 0 8px;
+    margin: 20px 0 8px 0;
+    width: 100%; /* Ensure captions take full width */
+    box-sizing: border-box;
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+  }
+}
+
+/* Close button styling */
+.close-button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.close-icon {
+  width: 20px;
+  height: 20px;
+  color: #333;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .sidebar-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .navigation-container {
+    height: calc(100vh - 100px);
+    padding-bottom: 20px;
+    overflow-y: auto !important;
+    overflow-x: hidden !important; /* Prevent horizontal scrolling on mobile */
+    width: 100%;
+    box-sizing: border-box;
+
+    /* Force scrollbar visibility on mobile */
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 0; /* Hide horizontal scrollbar */
+      display: block !important;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+    }
+  }
+
+  .sidebar-header {
+    margin-top: 0;
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+  }
+}

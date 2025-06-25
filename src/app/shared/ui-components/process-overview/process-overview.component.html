@@ -1,0 +1,74 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="d-flex w-100 align-items-center">
+      <mat-card-title class="d-flex align-items-center">
+        <i-tabler name="chart-bar" class="icon-20 m-r-8"></i-tabler>
+        Process Overview
+      </mat-card-title>
+      <div class="m-l-auto">
+        <mat-form-field class="theme-select" appearance="outline">
+          <mat-select
+            [value]="selectedTimeRange"
+            (selectionChange)="onTimeRangeChange($event.value)"
+          >
+            @for(range of timeRanges; track range.value) {
+            <mat-option [value]="range.value">
+              {{ range.viewValue }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    @if (isLoading) {
+    <div
+      class="d-flex justify-content-center align-items-center"
+      style="height: 390px"
+    >
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    } @else if (error) {
+    <div
+      class="d-flex flex-column justify-content-center align-items-center"
+      style="height: 390px"
+    >
+      <i-tabler
+        name="alert-circle"
+        class="icon-48 text-error m-b-16"
+      ></i-tabler>
+      <p class="text-muted">{{ error }}</p>
+      <button mat-button color="primary" (click)="loadProcessOverviewData()">
+        <i-tabler name="refresh" class="icon-16 m-r-8"></i-tabler>
+        Retry
+      </button>
+    </div>
+    } @else {
+    <apx-chart
+      [series]="processOverviewChart.series"
+      [dataLabels]="processOverviewChart.dataLabels"
+      [chart]="processOverviewChart.chart"
+      [legend]="processOverviewChart.legend"
+      [xaxis]="processOverviewChart.xaxis"
+      [yaxis]="processOverviewChart.yaxis"
+      [grid]="processOverviewChart.grid"
+      [stroke]="processOverviewChart.stroke"
+      [tooltip]="processOverviewChart.tooltip"
+      [plotOptions]="processOverviewChart.plotOptions"
+    >
+    </apx-chart>
+
+    <!-- Quick Action -->
+    <div class="d-flex justify-content-center m-t-16">
+      <button
+        mat-stroked-button
+        color="primary"
+        routerLink="/features/processes"
+      >
+        <i-tabler name="external-link" class="icon-16 m-r-4"></i-tabler>
+        View All Processes
+      </button>
+    </div>
+    }
+  </mat-card-content>
+</mat-card>

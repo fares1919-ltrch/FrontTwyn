@@ -1,0 +1,134 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="d-flex align-items-center justify-content-between m-b-16">
+      <mat-card-title class="d-flex align-items-center">
+        <i-tabler name="users" class="icon-20 m-r-8"></i-tabler>
+        User Management
+      </mat-card-title>
+      @if (isAdmin) {
+      <button
+        mat-icon-button
+        (click)="refreshStats()"
+        [disabled]="isLoading"
+        class="text-muted"
+      >
+        <i-tabler
+          name="refresh"
+          class="icon-16"
+          [class.spin]="isLoading"
+        ></i-tabler>
+      </button>
+      }
+    </div>
+
+    @if (!isAdmin) {
+    <div
+      class="d-flex flex-column justify-content-center align-items-center"
+      style="height: 200px"
+    >
+      <i-tabler name="lock" class="icon-48 text-muted m-b-16"></i-tabler>
+      <p class="text-muted text-center">
+        Admin access required to view user statistics
+      </p>
+    </div>
+    } @else if (isLoading) {
+    <div
+      class="d-flex justify-content-center align-items-center"
+      style="height: 200px"
+    >
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    } @else if (error) {
+    <div
+      class="d-flex flex-column justify-content-center align-items-center"
+      style="height: 200px"
+    >
+      <i-tabler
+        name="alert-circle"
+        class="icon-48 text-error m-b-16"
+      ></i-tabler>
+      <p class="text-muted">{{ error }}</p>
+      <button mat-button color="primary" (click)="refreshStats()">
+        <i-tabler name="refresh" class="icon-16 m-r-8"></i-tabler>
+        Retry
+      </button>
+    </div>
+    } @else if (dashboardStats) {
+    <div class="row">
+      <div class="col-7">
+        <!-- Chart -->
+        <div class="d-flex justify-content-center">
+          <apx-chart
+            [series]="userStatsChart.series"
+            [chart]="userStatsChart.chart"
+            [labels]="userStatsChart.labels"
+            [colors]="userStatsChart.colors"
+            [legend]="userStatsChart.legend"
+            [dataLabels]="userStatsChart.dataLabels"
+            [plotOptions]="userStatsChart.plotOptions"
+            [tooltip]="userStatsChart.tooltip"
+          >
+          </apx-chart>
+        </div>
+      </div>
+      <div class="col-5">
+        <!-- Main Stats -->
+        <div class="text-center m-b-16">
+          <h3 class="f-w-600 text-primary m-b-4">
+            {{ formatNumber(dashboardStats.totalUsers) }}
+          </h3>
+          <p class="f-s-14 text-muted m-b-0">Total Users</p>
+        </div>
+
+        <div class="text-center m-b-16">
+          <div class="d-flex align-items-center justify-content-center m-b-8">
+            <i-tabler
+              name="trending-up"
+              class="icon-16 text-success m-r-4"
+            ></i-tabler>
+            <span class="f-s-18 f-w-600 text-success"
+              >{{ getValidationRate() }}%</span
+            >
+          </div>
+          <p class="f-s-12 text-muted">Validation Rate</p>
+        </div>
+
+        <!-- User Breakdown -->
+        <div class="m-t-16">
+          <div class="d-flex align-items-center m-b-8">
+            <i-tabler
+              name="circle-filled"
+              class="text-success icon-8 d-flex"
+            ></i-tabler>
+            <span class="m-l-8 f-s-12 text-muted"
+              >Validated: {{ getValidatedUsers() }}</span
+            >
+          </div>
+          <div class="d-flex align-items-center m-b-8">
+            <i-tabler
+              name="circle-filled"
+              class="text-warning icon-8 d-flex"
+            ></i-tabler>
+            <span class="m-l-8 f-s-12 text-muted"
+              >Pending: {{ dashboardStats.pendingUsers }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="d-flex justify-content-center m-t-16">
+      <button
+        mat-stroked-button
+        color="primary"
+        routerLink="/features/admin"
+        class="m-r-8"
+      >
+        <i-tabler name="settings" class="icon-16 m-r-4"></i-tabler>
+        Manage Users
+      </button>
+    </div>
+    }
+  </mat-card-content>
+</mat-card>

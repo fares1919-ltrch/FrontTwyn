@@ -1,0 +1,115 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="d-flex align-items-center justify-content-between m-b-16">
+      <mat-card-title class="d-flex align-items-center">
+        <i-tabler
+          [name]="getHealthIcon()"
+          [class]="'icon-20 m-r-8 ' + getHealthColor()"
+        ></i-tabler>
+        System Health
+      </mat-card-title>
+      <div class="d-flex align-items-center">
+        <span class="f-s-12 text-muted m-r-8">{{ getTimeSinceUpdate() }}</span>
+        <button
+          mat-icon-button
+          (click)="refreshHealth()"
+          [disabled]="isLoading"
+          class="text-muted"
+        >
+          <i-tabler
+            name="refresh"
+            class="icon-16"
+            [class.spin]="isLoading"
+          ></i-tabler>
+        </button>
+      </div>
+    </div>
+
+    @if (isLoading) {
+    <div
+      class="d-flex justify-content-center align-items-center"
+      style="height: 200px"
+    >
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    } @else if (error) {
+    <div
+      class="d-flex flex-column justify-content-center align-items-center"
+      style="height: 200px"
+    >
+      <i-tabler
+        name="alert-circle"
+        class="icon-48 text-error m-b-16"
+      ></i-tabler>
+      <p class="text-muted">{{ error }}</p>
+      <button mat-button color="primary" (click)="refreshHealth()">
+        <i-tabler name="refresh" class="icon-16 m-r-8"></i-tabler>
+        Retry
+      </button>
+    </div>
+    } @else {
+    <!-- Overall Health Status -->
+    <div class="text-center m-b-20">
+      <div class="d-flex align-items-center justify-content-center m-b-8">
+        <i-tabler
+          [name]="getHealthIcon()"
+          [class]="'icon-24 m-r-8 ' + getHealthColor()"
+        ></i-tabler>
+        <span [class]="'f-s-18 f-w-600 ' + getHealthColor()">
+          {{
+            overallHealth === "good"
+              ? "Healthy"
+              : overallHealth === "warning"
+              ? "Warning"
+              : "Critical"
+          }}
+        </span>
+      </div>
+      <p class="f-s-12 text-muted">System Status</p>
+    </div>
+
+    <!-- Health Metrics Grid -->
+    <div class="row m-b-20">
+      @for (metric of healthMetrics; track metric.name) {
+      <div class="col-6 m-b-12">
+        <div class="d-flex align-items-center">
+          <i-tabler
+            [name]="metric.icon"
+            [class]="'icon-16 m-r-8 ' + getMetricColor(metric.status)"
+          ></i-tabler>
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-baseline">
+              <span
+                [class]="
+                  'f-s-14 f-w-600 m-r-4 ' + getMetricColor(metric.status)
+                "
+              >
+                {{ metric.value }}{{ metric.unit }}
+              </span>
+            </div>
+            <p class="f-s-12 text-muted m-b-0">{{ metric.name }}</p>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- System Alerts -->
+    <div class="m-b-16">
+      <h6 class="f-s-14 f-w-600 m-b-12">System Alerts</h6>
+      <div class="alert-container" style="max-height: 120px; overflow-y: auto">
+        @for (alert of systemAlerts; track alert.message) {
+        <div class="d-flex align-items-start m-b-8">
+          <i-tabler
+            [name]="alert.icon"
+            [class]="'icon-14 m-r-8 m-t-2 ' + alert.color"
+          ></i-tabler>
+          <p class="f-s-12 m-b-0 flex-grow-1">{{ alert.message }}</p>
+        </div>
+        }
+      </div>
+    </div>
+
+    }
+  </mat-card-content>
+</mat-card>
